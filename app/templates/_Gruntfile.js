@@ -1,8 +1,4 @@
-var LIVERELOAD_PORT = 35729;
-var lrSnippet = require('connect-livereload')({port: LIVERELOAD_PORT});
-var mountFolder = function (connect, dir) {
-  return connect.static(require('path').resolve(dir));
-};
+var path = require('path');
 
 module.exports = function(grunt) {
 
@@ -13,22 +9,18 @@ module.exports = function(grunt) {
         },
         concat: {
             dist: {
-                src: ['<banner:meta.banner>', '<file_strip_banner:src/<%= pkg.name %>.js>'],
-                dest: 'dist/<%= pkg.name %>.js'
+                src: ['<banner:meta.banner>', '<file_strip_banner:src/generator-iris.js>'],
+                dest: 'dist/generator-iris.js'
             }
         },
         min: {
             dist: {
                 src: ['<banner:meta.banner>', '<config:concat.dist.dest>'],
-                dest: 'dist/<%= pkg.name %>.min.js'
+                dest: 'dist/generator-iris.min.js'
             }
         },
         qunit: {
             files: ['www/test/**/*.html']
-        },
-        watch: {
-            files: '<config:lint.files>',
-            tasks: 'lint qunit'
         },
         jshint: {
             uses_defaults: ['grunt.js', 'www/app/**/*.js', 'test/**/*.js'],
@@ -53,33 +45,26 @@ module.exports = function(grunt) {
             }
         },
         uglify: {},
-        connect: {
-          options: {
-            port: 8080,
-            livereload: true
-          },
-          livereload: {
+        express: {
+          server: {
             options: {
-              middleware: function (connect) {
-                return [
-                  lrSnippet,
-                  mountFolder(connect, '.')
-                ];
-              }
+              port: 8080,
+              bases: 'www',
+              hostname: 'localhost',
+              serverreload: true,
+              server: path.resolve('./express-server.js')
             }
-          }
         }
+  }
     });
 
     // Default task.    
-    grunt.registerTask('default', ['jshint', 'connect:livereload', 'watch']);
-
-    grunt.registerTask('test', ['jshint', 'qunit']);
+    grunt.registerTask('default', ['jshint', 'express']);
 
     grunt.loadNpmTasks('grunt-contrib-jshint');
-    grunt.loadNpmTasks('grunt-contrib-uglify');
-    grunt.loadNpmTasks('grunt-contrib-connect');
     grunt.loadNpmTasks('grunt-contrib-watch');
+    grunt.loadNpmTasks('grunt-contrib-uglify');
+    grunt.loadNpmTasks('grunt-express');
     grunt.loadNpmTasks('grunt-contrib-qunit');
     grunt.loadNpmTasks('grunt-contrib-concat');
 

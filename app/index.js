@@ -63,7 +63,11 @@ IrisGenerator.prototype.app = function app() {
   this.template('_package.json', 'package.json');
   this.template('_iris.json', 'iris.json');
   this.template('_Gruntfile.js', 'Gruntfile.js');
+    this.template('_express-server.js', 'express-server.js');
   this.template('_bower.json', 'bower.json');
+  this.template('_bowerrc', '.bowerrc');
+
+
 
   this.copy('_init.js', 'www/app/init.js');
   this.copy('_en-us.js', 'www/app/lang/en-us.js');
