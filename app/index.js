@@ -12,6 +12,7 @@ var IrisGenerator = module.exports = function IrisGenerator(args, options, confi
   });
 
   this.pkg = JSON.parse(this.readFileAsString(path.join(__dirname, '../package.json')));
+  
 };
 
 util.inherits(IrisGenerator, yeoman.generators.Base);
@@ -74,9 +75,20 @@ IrisGenerator.prototype.app = function app() {
 
   this.copy('_welcome.js', 'www/app/screen/welcome.js');
   this.copy('_welcome.html', 'www/app/screen/welcome.html');
+
+  
 };
 
 IrisGenerator.prototype.projectfiles = function projectfiles() {
   this.copy('editorconfig', '.editorconfig');
   this.copy('jshintrc', '.jshintrc');
+
+  this.indexFile = this.engine(this.readFileAsString('www/index.html'), this);
+
+  this.indexFile = this.domUpdate(this.indexFile, 'body', '<div>fffd</div>', 'a');
+
+  this.initFile = this.engine(this.readFileAsString('www/app/init.js'), this);
+
+
+  console.log("this.initFile", this.initFile);
 };
