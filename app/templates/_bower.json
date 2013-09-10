@@ -1,0 +1,11 @@
+{
+  "name": "<%= _.camelize(appName) %>",
+  "version": "0.0.0",
+  "dependencies": {
+  	"iris": "*"
+   <% if (bootstrap) { %>
+    , "bootstrap": "*"
+    <% } %>
+  }
+}
+
