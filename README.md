@@ -29,11 +29,27 @@ To install generator-iris from npm, run:
 $ npm install -g generator-iris
 ```
 
-Finally, initiate the generator:
+Initiate the generator (create the directory project previously):
 
 ```
 $ yo iris
 ```
+
+To start de server:
+
+```
+$ grunt
+```
+
+And navigate to <http://localhost:8080>
+
+
+Finally, for create a component:
+
+```
+$ yo iris:create-component component-name
+```
+
 
 ### Getting To Know Yeoman
 
