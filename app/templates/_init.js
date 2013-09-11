@@ -1,12 +1,12 @@
 iris.path = {
-	screens : {
-		welcome : { js:'screen/welcome.js', html:'screen/welcome.html'}
+	"screen": {
+		"welcome" : { "js":"screen/welcome.js", "html":"screen/welcome.html"}
 	},
-	ui : {
+	"ui": {
 	},
-	resource : {
+	"resource": {
 	}
-};
+}; //End of iris.path definition. Do not remove or modify this comment
 
 iris.evts = {
 };
@@ -32,6 +32,6 @@ $(document).ready(
 			}
 			);
 
-		iris.welcome(iris.path.screens.welcome.js);
+		iris.welcome(iris.path.screen.welcome.js);
 	}
 );

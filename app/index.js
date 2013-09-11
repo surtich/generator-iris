@@ -64,7 +64,7 @@ IrisGenerator.prototype.app = function app() {
   this.template('_package.json', 'package.json');
   this.template('_iris.json', 'iris.json');
   this.template('_Gruntfile.js', 'Gruntfile.js');
-    this.template('_express-server.js', 'express-server.js');
+  this.template('_express-server.js', 'express-server.js');
   this.template('_bower.json', 'bower.json');
   this.template('_bowerrc', '.bowerrc');
 
@@ -82,13 +82,4 @@ IrisGenerator.prototype.app = function app() {
 IrisGenerator.prototype.projectfiles = function projectfiles() {
   this.copy('editorconfig', '.editorconfig');
   this.copy('jshintrc', '.jshintrc');
-
-  this.indexFile = this.engine(this.readFileAsString('www/index.html'), this);
-
-  this.indexFile = this.domUpdate(this.indexFile, 'body', '<div>fffd</div>', 'a');
-
-  this.initFile = this.engine(this.readFileAsString('www/app/init.js'), this);
-
-
-  console.log("this.initFile", this.initFile);
 };
