@@ -1,6 +1,6 @@
 {
   "name": "generator-iris",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "Scaffold out a front-end Iris web app",
   "keywords": [
     "iris-generator",

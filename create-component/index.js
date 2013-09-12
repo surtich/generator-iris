@@ -40,10 +40,12 @@ CreateComponentGenerator.prototype.askFor = function askFor() {
 };
 
 CreateComponentGenerator.prototype.app = function app() {
-  this.mkdir('www/app/' + this.component + '/' + this.name);
-  this.template('_component.js', 'www/app/' + this.component + '/' + this.name + '.js');
   if (this.component === "ui" || this.component === "screen") {
-  	this.template('_component.html', 'www/app/' + this.component + '/' + this.name + '.html');
+  	this.mkdir('www/app/' + this.component + '/' + this.name);
+  	this.template('_component.js', 'www/app/' + this.component + '/' + this.name + '/' + this.name + '.js');
+  	this.template('_component.html', 'www/app/' + this.component + '/' + this.name + '/'+ this.name + '.html');
+  } else {
+  	this.template('_component.js', 'www/app/' + this.component + '/' + this.name + '.js');
   }
   
   var initFile = this.readFileAsString('www/app/init.js');
@@ -55,8 +57,8 @@ CreateComponentGenerator.prototype.app = function app() {
   	var irisPath = JSON.parse(result[1]);
   	if (this.component === "ui" || this.component === "screen") {
   		irisPath[this.component][this.name] = {
-  			js: this.component + "/" + this.name + ".js",
-  			html: this.component + "/" + this.name + ".html",
+  			js: this.component + "/" + this.name + "/" + this.name + ".js",
+  			html: this.component + "/" + this.name + "/" + this.name + ".html",
   		};
   	} else {
   		irisPath[this.component][this.name] = this.component + "/" + this.name + ".js";
