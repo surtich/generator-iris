@@ -1,7 +1,7 @@
 iris.<%=component%>(function(self) {
 	<% if (component === 'ui' || component === 'screen' ) { %>
 		self.create = function() {
-			self.tmpl(iris.path.ui.<%=name%>.html);
+			self.tmpl(iris.path.<%=component%>.<%=name%>.html);
 		};
 
 		self.awake = function(){
@@ -11,4 +11,4 @@ iris.<%=component%>(function(self) {
 			return self.post('/sample/' + param, data, f_ok, f_error);
 		};
 	<% } %>
-}, iris.path.<%=component%>.<%=name%>.js);
+}, iris.path.<%=component%>.<%=name%><% if (component === 'ui' || component === 'screen' ) {%>.js<%}%>);

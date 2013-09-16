@@ -15,7 +15,7 @@ $(document).ready(
 	function () {
 		iris.translations('en-US', './app/lang/en-us.js');
 
-		iris.baseUri('/app/');
+		iris.baseUri('app/');
 
 		iris.locale(
 			'en-US', {
