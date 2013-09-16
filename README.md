@@ -47,7 +47,7 @@ And navigate to <http://localhost:8080>
 Finally, for create a component:
 
 ```
-$ yo iris:new component-name
+$ yo iris:new [[parent/]component-name]...
 ```
 
 

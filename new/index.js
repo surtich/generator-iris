@@ -1,21 +1,41 @@
 'use strict';
 var util = require('util');
-var yeoman = require('yeoman-generator');
+var ScriptBase = require('../script-base.js');
 
 var CreateComponentGenerator = module.exports = function CreateComponentGenerator(args, options, config) {
-  // By calling `NamedBase` here, we get the argument to the subgenerator call
-  // as `this.name`.
-  yeoman.generators.NamedBase.apply(this, arguments);
 
-  console.log('You called the create-component subgenerator with the argument ' + this.name + '.');
+  ScriptBase.apply(this, arguments);
+
 };
 
-util.inherits(CreateComponentGenerator, yeoman.generators.NamedBase);
+util.inherits(CreateComponentGenerator, ScriptBase);
 
 CreateComponentGenerator.prototype.askFor = function askFor() {
   var cb = this.async();
 
-  var prompts = [{
+
+  var prompts = [];
+
+  if (this.arguments.length == 0) {
+    prompts.push({
+      type: "input",
+      name: "name",
+      message: "What is the name of de component (use blanks for add multiple components)",
+      default: "myComponent",
+      validate: function( value ) {
+        var pass = value.match(/^.*[^ ]+.*$/);
+        if (pass) {
+          return true;
+        } else {
+          return "Please enter a valid component name";
+        }
+      }
+    });    
+  } else {
+    this.names = this.arguments;
+  }
+
+  prompts.push({
     type: 'list',
     name: 'component',
     message: 'Which component would you like to create?',
@@ -31,45 +51,21 @@ CreateComponentGenerator.prototype.askFor = function askFor() {
       value: 'resource',
       checked: true
     }]
-  }];
+  });
 
   this.prompt(prompts, function (props) {
     this.component = props.component;
+    if (props.name) {
+      this.names = props.name.replace(/ +/g,' ').trim().split(' ');  
+    }
     cb();
   }.bind(this));
 };
 
 CreateComponentGenerator.prototype.app = function app() {
-  if (this.component === "ui" || this.component === "screen") {
-  	this.mkdir('www/app/' + this.component + '/' + this.name);
-  	this.template('_component.js', 'www/app/' + this.component + '/' + this.name + '/' + this.name + '.js');
-  	this.template('_component.html', 'www/app/' + this.component + '/' + this.name + '/'+ this.name + '.html');
-  } else {
-  	this.template('_component.js', 'www/app/' + this.component + '/' + this.name + '.js');
+  var i = 0;
+  for (; i < this.names.length; i++) {
+    this.createComponent(this.component, this.names[i]);  
   }
-  
-  var initFile = this.readFileAsString('www/app/init.js');
-
-  var regExp = new RegExp("iris\.path *= *({(.|\n)*);.*// *End of iris.path definition. Do not remove or modify this comment");
-
-  var result = regExp.exec(initFile);
-  if (result) {
-  	var irisPath = JSON.parse(result[1]);
-  	if (this.component === "ui" || this.component === "screen") {
-  		irisPath[this.component][this.name] = {
-  			js: this.component + "/" + this.name + "/" + this.name + ".js",
-  			html: this.component + "/" + this.name + "/" + this.name + ".html",
-  		};
-  	} else {
-  		irisPath[this.component][this.name] = this.component + "/" + this.name + ".js";
-  	}
-  	
-  	var start = initFile.substring(0, result.index);
-  	var end = initFile.substring(result.index + result[0].length);
-
-  	initFile = start + "iris.path = " + JSON.stringify(irisPath, null, "\t") + "; //End of iris.path definition. Do not remove or modify this comment" + end;
-
-	this.write('www/app/init.js', initFile);  	
-
-  }
+  this.updateInit(this.component, this.names);
 };

@@ -6,7 +6,7 @@ iris.path = {
 	},
 	"resource": {
 	}
-}; //End of iris.path definition. Do not remove or modify this comment
+};
 
 iris.evts = {
 };
