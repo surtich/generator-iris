@@ -3,6 +3,7 @@ var util = require('util');
 var path = require('path');
 var yeoman = require('yeoman-generator');
 var irisUtils = require('./util.js');
+var fs = require('fs');
 
 module.exports = Generator;
 
@@ -36,25 +37,15 @@ Generator.prototype.createComponent = function (component, name) {
 
 Generator.prototype.updateInit = function (component, names) {
   var i = 0;
-  var initFile = this.readFileAsString('www/app/init.js');
-
-  var regExp = new RegExp("iris\.path *= *({([^;]|\n)*})[^;]*;");
-
-  var result = regExp.exec(initFile);
-  if (result) {
-    var irisPath = JSON.parse(result[1]);
+  var result = irisUtils.readObject('www/app/init.js', 'iris.path');
+  if (result.object) {    
     for (i = 0; i < names.length; i++) {
       var name = this.normalizeName(names[i]);
-      this.createHashs(irisPath, component, name);
+      this.createHashs(result.object, component, name);
     }
-    
-    var start = initFile.substring(0, result.index);
-    var end = initFile.substring(result.index + result[0].length);
-
-    initFile = start + "iris.path = " + JSON.stringify(irisPath, null, "\t") + ";" + end;
-
-    this.write('www/app/init.js', initFile);    
-
+    result.updater(result.object, this.write, this);
+  } else {
+    console.log("iris.path not found in www/app/init.js");
   }
 };
 
@@ -80,4 +71,46 @@ Generator.prototype.createHashs = function (irisPath, component, name) {
   
 }
 
+Generator.prototype.newFromInit = function() {
+  var that = this;
+  var changes = false;
+  function iterate(obj, preDir) {
+    for (var hash in obj) {
+      var dir = preDir || "";
+      if (dir) {
+        dir += "/";   
+      }
+      dir += hash;
+      
+      if (typeof obj[hash] === 'object') {
+        iterate(obj[hash], dir);
+      } else {
+        var componentHash = "iris.path." + dir.replace(/\//g, '.');
+        var filePath = 'www/app/' + obj[hash];
+        var regExp = /^([^/]+).*\/([^/.]+)\.([^/.]+)$/;
 
+        var result = regExp.exec(obj[hash]);
+        if (result !== null) {
+          that.component = result[1];
+          that.name = result[2];
+          that.hash = componentHash;
+          var componentExt = result[3];
+        } else {
+          console.log("Bad format " + obj[hash]);
+        }
+        
+        if (!fs.existsSync(filePath)) {
+          that.template('_component.' + componentExt, filePath);
+          changes = true;
+        }
+      }
+    }
+  }
+  var result = irisUtils.readObject('www/app/init.js', 'iris.path');
+  if (result.object) {
+    iterate(result.object);
+    if (!changes) {
+      console.log("Nothing to do!");
+    }
+  }
+} 

@@ -44,11 +44,29 @@ $ grunt
 And navigate to <http://localhost:8080>
 
 
-Finally, for create a component:
+Finally, for create new components the are two ways.
+
+First way (passing the components names):
 
 ```
 $ yo iris:new [[parent/]component-name]...
 ```
+
+Example:
+
+```
+$ yo iris:new main/home main/exit
+```
+
+Two components will be added to the *init.js* file and to the filesystem (their types will be asked).
+
+Second way (reading de *init.js* file):
+
+```
+$ yo iris:new-from-init
+```
+
+This will read *iris.path* variable from the *init.js* file searching for those files that do not exist and It will create them.
 
 
 ### Getting To Know Yeoman

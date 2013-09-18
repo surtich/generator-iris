@@ -3,7 +3,6 @@ var util = require('util');
 var ScriptBase = require('../script-base.js');
 
 var CreateComponentGenerator = module.exports = function CreateComponentGenerator(args, options, config) {
-
   ScriptBase.apply(this, arguments);
 
 };
@@ -11,8 +10,8 @@ var CreateComponentGenerator = module.exports = function CreateComponentGenerato
 util.inherits(CreateComponentGenerator, ScriptBase);
 
 CreateComponentGenerator.prototype.askFor = function askFor() {
+  
   var cb = this.async();
-
 
   var prompts = [];
 
@@ -59,7 +58,8 @@ CreateComponentGenerator.prototype.askFor = function askFor() {
       this.names = props.name.replace(/ +/g,' ').trim().split(' ');  
     }
     cb();
-  }.bind(this));
+  }.bind(this));  
+  
 };
 
 CreateComponentGenerator.prototype.app = function app() {
